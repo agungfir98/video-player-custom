@@ -2,13 +2,17 @@ const playBtn = document.querySelector(".play-btn");
 const teatherBtn = document.querySelector(".teather-btn");
 const fullScreenBtn = document.querySelector(".full-screen-btn");
 const miniPlayBtn = document.querySelector(".mini-play-btn");
+const captionBtn = document.querySelector(".captions-btn");
+const playBackSpeedBtn = document.querySelector(".playback-speed-btn");
+const playSpeedBtns = document.querySelectorAll(".play-speed");
+
 const video = document.querySelector("video");
 const videoContainer = document.querySelector(".video-container");
 const muteBtn = document.querySelector(".mute-btn");
 const volumeSlider = document.querySelector(".volume-slider");
 const currentTime = document.querySelector(".current-time");
 const totalDuration = document.querySelector(".total-duration");
-const captions = document.querySelector(".captions-btn");
+const playbackOption = document.querySelector(".playback-option");
 
 fullScreenBtn.addEventListener("click", toggleFullScreenBtn);
 
@@ -45,6 +49,9 @@ document.addEventListener("keydown", (e) => {
     case "arrowleft":
     case "j":
       manipulateTime(-5);
+      break;
+    case "c":
+      captionsToggle();
       break;
     default:
       break;
@@ -157,6 +164,35 @@ function manipulateTime(time) {
   video.currentTime += time;
 }
 
-captions.addEventListener("click", () => {
-  videoContainer.classList.toggle("captions");
+// captions
+video.textTracks[0].mode = "hidden";
+
+function captionsToggle() {
+  const captions = video.textTracks[0];
+  const isHidden = captions.mode === "hidden";
+  captions.mode = isHidden ? "showing" : "hidden";
+  videoContainer.classList.toggle("captions", isHidden);
+}
+
+captionBtn.addEventListener("click", captionsToggle);
+
+// playback speed
+playBackSpeedBtn.addEventListener("click", () => {
+  playbackOption.classList.toggle("hidden");
 });
+
+const dataPlaybackSpeed = videoContainer.dataset.playSpeed;
+video.playbackRate = dataPlaybackSpeed;
+// console.log(videoContainer.dataset.playSpeed);
+video.playbackRate;
+
+playSpeedBtns.forEach((i) => {
+  i.addEventListener("click", changePlaybackrate);
+});
+// () => {
+//   video.playbackRate = i.dataset.playSpeed;
+// }
+function changePlaybackrate() {
+  video.playbackRate = this.dataset.playSpeed;
+}
+// console.log(playSpeedBtns);

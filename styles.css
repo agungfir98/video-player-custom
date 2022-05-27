@@ -151,3 +151,29 @@ video {
 .video-container.captions .captions-btn {
   border-bottom: solid red 2px;
 }
+
+.video-container .playback-option {
+  z-index: 100;
+  width: 100px;
+  position: absolute;
+  left: auto;
+  right: 7%;
+  bottom: 8%;
+  justify-content: start;
+}
+
+.video-container .playback-option button {
+  width: 100%;
+  padding: 5px;
+  background-color: rgba(25, 24, 24, 0.614);
+  color: white;
+  text-align: start;
+  border: none;
+}
+
+.video-container .playback-option button:hover {
+  background-color: rgba(52, 51, 51, 0.614);
+}
+.video-container .playback-option.hidden {
+  display: none;
+}
