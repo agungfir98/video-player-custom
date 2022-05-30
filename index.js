@@ -8,6 +8,7 @@ const playSpeedBtns = document.querySelectorAll(".play-speed");
 
 const video = document.querySelector("video");
 const videoContainer = document.querySelector(".video-container");
+const playbackWrapper = document.querySelector(".playback-wrapper");
 const muteBtn = document.querySelector(".mute-btn");
 const volumeSlider = document.querySelector(".volume-slider");
 const currentTime = document.querySelector(".current-time");
@@ -19,6 +20,13 @@ fullScreenBtn.addEventListener("click", toggleFullScreenBtn);
 teatherBtn.addEventListener("click", toggleTeather);
 
 miniPlayBtn.addEventListener("click", toggleMiniPlay);
+
+document.addEventListener("click", (e) => {
+  const isOptionBtn = e.target.matches("[data-option-btn]");
+  if (!isOptionBtn) {
+    playbackWrapper.classList.remove("active");
+  }
+});
 
 document.addEventListener("keydown", (e) => {
   const tagName = document.activeElement.tagName.toLocaleLowerCase();
@@ -177,22 +185,39 @@ function captionsToggle() {
 captionBtn.addEventListener("click", captionsToggle);
 
 // playback speed
-playBackSpeedBtn.addEventListener("click", () => {
-  playbackOption.classList.toggle("hidden");
-});
-
 const dataPlaybackSpeed = videoContainer.dataset.playSpeed;
+
 video.playbackRate = dataPlaybackSpeed;
-// console.log(videoContainer.dataset.playSpeed);
 video.playbackRate;
 
+const checkListNode = document.createElement("span");
+checkListNode.className = "checklist";
+const checkList = document.createTextNode(" ✔");
+checkListNode.appendChild(checkList);
+
 playSpeedBtns.forEach((i) => {
+  if (i.dataset.playSpeed === videoContainer.dataset.playSpeed) {
+    i.prepend(checkListNode);
+  }
   i.addEventListener("click", changePlaybackrate);
 });
-// () => {
-//   video.playbackRate = i.dataset.playSpeed;
-// }
+
 function changePlaybackrate() {
   video.playbackRate = this.dataset.playSpeed;
+  videoContainer.dataset.playSpeed = this.dataset.playSpeed;
+  playSpeedBtns.forEach((i) => {
+    if (i.dataset.playSpeed === videoContainer.dataset.playSpeed) {
+      i.prepend(checkListNode);
+    }
+  });
 }
-// console.log(playSpeedBtns);
+
+playBackSpeedBtn.addEventListener("click", togglePlaySpeed);
+function togglePlaySpeed() {
+  const isPlaybackWreapperActive = playbackWrapper.classList.contains("active");
+  if (isPlaybackWreapperActive) {
+    playbackWrapper.classList.remove("active");
+  } else {
+    playbackWrapper.classList.add("active");
+  }
+}

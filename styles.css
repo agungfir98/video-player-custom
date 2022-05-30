@@ -2,7 +2,9 @@
 *::before {
   box-sizing: border-box;
 }
-
+svg path {
+  pointer-events: none;
+}
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -152,28 +154,90 @@ video {
   border-bottom: solid red 2px;
 }
 
+/* Playback Rate (video speed) */
+.playback-wrapper .playback-speed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .video-container .playback-option {
-  z-index: 100;
-  width: 100px;
+  transform: scaleX(0);
+  /* display: none; */
   position: absolute;
-  left: auto;
-  right: 7%;
-  bottom: 8%;
+  z-index: 100;
+  width: 150px;
+  right: 80px;
+  bottom: 50px;
   justify-content: start;
+  background-color: rgba(0, 0, 0, 0.614);
 }
 
 .video-container .playback-option button {
+  display: flex;
   width: 100%;
   padding: 5px;
-  background-color: rgba(25, 24, 24, 0.614);
   color: white;
   text-align: start;
   border: none;
+  cursor: pointer;
+  padding-left: 50px;
+}
+.video-container .playback-option button:hover {
+  background-color: rgba(107, 107, 107, 0.614);
+}
+.video-container .playback-option button .checklist {
+  position: absolute;
+  left: 20px;
 }
 
-.video-container .playback-option button:hover {
-  background-color: rgba(52, 51, 51, 0.614);
+.video-container .playback-wrapper.active .playback-option {
+  transform: scaleX(1);
 }
-.video-container .playback-option.hidden {
+
+/* timeline container */
+.video-container .timeline-container {
+  position: relative;
+}
+.timeline-container #timeline {
+  position: absolute;
+  width: 50%;
+}
+
+.timeline-container {
+  height: 5px;
+  margin-inline: 0.5rem;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+}
+
+.timeline {
+  background-color: rgba(100, 100, 100, 0.5);
+  width: 100%;
+  height: 5px;
+  position: relative;
+}
+.timeline:hover {
+  height: 10px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  background-color: rgb(150, 150, 150);
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: calc(100% - var(--preview-position) * 100%);
   display: none;
+}
+
+.timeline::after {
+  content: "";
+  position: absolute;
+  background-color: red;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: calc(100% - var(--progress-position) * 100%);
 }
