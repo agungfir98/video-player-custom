@@ -14,6 +14,7 @@ const volumeSlider = document.querySelector(".volume-slider");
 const currentTime = document.querySelector(".current-time");
 const totalDuration = document.querySelector(".total-duration");
 const playbackOption = document.querySelector(".playback-option");
+const timelineContainer = document.querySelector(".timeline-container");
 
 fullScreenBtn.addEventListener("click", toggleFullScreenBtn);
 
@@ -65,6 +66,47 @@ document.addEventListener("keydown", (e) => {
       break;
   }
 });
+
+// timeline
+timelineContainer.addEventListener("mousemove", handleTimeline);
+timelineContainer.addEventListener("mousedown", toggleScrubbing);
+document.addEventListener("mouseup", (e) => {
+  if (isScrubbing) toggleScrubbing(e);
+});
+document.addEventListener("mousemove", (e) => {
+  if (isScrubbing) handleTimeline(e);
+});
+
+let isScrubbing = false;
+let wasPaused;
+
+function toggleScrubbing(e) {
+  const rect = timelineContainer.getBoundingClientRect();
+  const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
+
+  isScrubbing = (e.buttons & 1) === 1;
+  videoContainer.classList.toggle("scrubbing", isScrubbing);
+  if (isScrubbing) {
+    wasPaused = video.paused;
+    video.pause();
+  } else {
+    video.currentTime = percent * video.duration;
+    if (!wasPaused) video.play();
+  }
+  handleTimeline(e);
+}
+
+function handleTimeline(e) {
+  const rect = timelineContainer.getBoundingClientRect();
+  const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
+
+  timelineContainer.style.setProperty("--preview-position", percent);
+
+  if (isScrubbing) {
+    e.preventDefault();
+    timelineContainer.style.setProperty("--progress-position", percent);
+  }
+}
 
 // pause/play functionality
 playBtn.addEventListener("click", togglePlayBtn);
@@ -149,6 +191,8 @@ video.addEventListener("loadeddata", () => {
 });
 video.addEventListener("timeupdate", () => {
   currentTime.textContent = formatDuration(video.currentTime);
+  const percent = video.currentTime / video.duration;
+  timelineContainer.style.setProperty("--progress-position", percent);
 });
 
 const leadingZeroFormatter = new Intl.NumberFormat(undefined, {

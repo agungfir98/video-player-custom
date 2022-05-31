@@ -204,7 +204,7 @@ video {
 }
 
 .timeline-container {
-  height: 5px;
+  height: 10px;
   margin-inline: 0.5rem;
   align-items: center;
   cursor: pointer;
@@ -216,9 +216,6 @@ video {
   width: 100%;
   height: 5px;
   position: relative;
-}
-.timeline:hover {
-  height: 10px;
 }
 
 .timeline::before {
@@ -240,4 +237,29 @@ video {
   bottom: 0;
   top: 0;
   right: calc(100% - var(--progress-position) * 100%);
+}
+
+.timeline .thumb-indicator {
+  --scale: 0;
+  position: absolute;
+  transform: translateX(-50%) scale(var(--scale));
+  height: 200%;
+  background-color: red;
+  left: calc(var(--progress-position) * 100%);
+  top: -50%;
+  border-radius: 50%;
+  transition: transform 150ms ease-in-out;
+  aspect-ratio: 1/1;
+}
+
+.timeline-container:hover .timeline::before {
+  display: block;
+}
+
+.timeline-container:hover .timeline {
+  height: 100%;
+}
+
+.timeline-container:hover .thumb-indicator {
+  --scale: 1;
 }
